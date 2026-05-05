@@ -1,0 +1,58 @@
+🛠️ Step 1: Required Installations (The pip install command)
+To run this project on any new computer, you need to install the required Python libraries. Open your terminal and run this single command:
+
+Bash
+pip install flask python-dotenv requests langchain langchain-chroma langchain-huggingface langchain-groq langchain-community sentence-transformers chromadb
+(Note: sentence-transformers is required behind-the-scenes for the HuggingFace embeddings to work locally).
+
+🦙 Step 2: What about Ollama?
+Currently, your rag_engine.py is configured to use Groq (llama-3.1-8b-instant) because it is lightning-fast and runs in the cloud.
+
+If you plan to switch from Groq to Ollama so the AI runs 100% locally on your machine without internet, you would need to:
+
+Download and install the Ollama software from ollama.com.
+
+Open your terminal and download a model by running: ollama run llama3
+
+Install the LangChain Ollama package: pip install langchain-ollama
+
+Swap out ChatGroq for ChatOllama in your rag_engine.py.
+
+(If you are happy with the current speed and setup, you do not need Ollama right now!)
+
+📂 Step 3: Project Architecture & File Purposes
+Here is the official breakdown of your project structure. This explains the purpose of every single file in your system:
+
+1. Root Directory (The Core Setup)
+run.py: The main entry point. Running python run.py initializes the SQLite database and starts the Flask web server.
+
+ingest.py: The "Librarian." This script reads all the text files in the docs/ folder, splits them into manageable chunks, creates mathematical embeddings, and saves them into the chroma_db vector database so the AI can search them later.
+
+records.json: The mock private database. It stores the sensitive structural data of the cemetery (Blocks, Graves, Deceased individuals, and Interment statuses).
+
+.env: The secure vault. It holds your private API keys (Groq, TextBee) and is deliberately hidden from GitHub to prevent theft.
+
+.gitignore: The Git shield. It tells GitHub to ignore large databases (chroma_db, memoria_chat.db), cache folders (__pycache__), and secret files (.env).
+
+helloworld.txt: The project documentation and developer notes.
+
+2. The Application Module (app/ folder)
+app/__init__.py: The App Factory. It creates the Flask application instance and links the static/template folders so the backend knows where your HTML lives.
+
+app/database.py: The Memory Connector. It manages the connection to memoria_chat.db (SQLite), ensuring user chat histories are saved and handling database locks so the server doesn't crash.
+
+app/rag_engine.py: The AI Brain. This is the most complex file. It contains the "Traffic Cop" router that categorizes user questions, and the specific LangChain pipelines that query either the public ChromaDB or the private records.json database.
+
+app/routes.py: The API Gateway. It defines the URLs the frontend communicates with. It handles the rendering of the homepage, the generation and verification of OTPs via TextBee, and the routing of chat messages to the AI engine.
+
+3. Data & Knowledge Base (docs/ and Databases)
+docs/memoria.txt: The Ground Truth. This holds the official, public rules, addresses, and operating hours of the Mandaue City Public Cemetery.
+
+chroma_db/: (Auto-generated) The Vector Database created by ingest.py that allows the AI to perform similarity searches on the public documents.
+
+memoria_chat.db: (Auto-generated) The SQLite database created by database.py that stores the conversational history (short-term memory) so the AI remembers context.
+
+4. Frontend & User Interface (templates/ & static/)
+templates/index.html: The Face of the App. This is the single-page UI built with HTML, CSS, and Vanilla JavaScript. It handles the glassmorphism design, the mobile-responsive chat window, markdown parsing, and the interactive 6-digit OTP login portal.
+
+static/images/cityhall.jpg: The primary visual asset used for the hero background and the website's favicon.

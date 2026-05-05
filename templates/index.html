@@ -1,0 +1,872 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Memoria | Mandaue City Public Cemetery</title>
+
+    <!-- Meta Tags for Capstone Professionalism -->
+    <meta
+      name="description"
+      content="Official Management System for Mandaue City Public Cemetery. Efficient burial records and public inquiry assistant."
+    />
+    <meta name="author" content="John Anthony Oropesa Tabigne" />
+    <link rel="icon" type="image/jpeg" href="/static/images/cityhall.jpg" />
+
+    <style>
+      :root {
+        --primary: #1a56db;
+        --primary-dark: #1440a8;
+        --accent: #4cff91;
+        --danger: #ef4444;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --bg-glass: rgba(255, 255, 255, 0.9);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", "Segoe UI", sans-serif;
+      }
+
+      body {
+        background: #f1f5f9;
+        overflow-x: hidden;
+      }
+
+      /* --- Navbar --- */
+      nav {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 40px;
+        background: rgba(15, 23, 42, 0.4);
+        backdrop-filter: blur(12px);
+        z-index: 1000;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .nav-logo {
+        color: white;
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .nav-logo img {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--accent);
+      }
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        margin-left: 30px;
+        font-size: 14px;
+        font-weight: 500;
+        opacity: 0.8;
+        transition: 0.3s;
+        cursor: pointer;
+      }
+      .nav-links a:hover {
+        opacity: 1;
+        color: var(--accent);
+      }
+
+      /* --- Hero Section --- */
+      .hero {
+        height: 100vh;
+        background: url("/static/images/cityhall.jpg") center center / cover
+          no-repeat;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(15, 23, 42, 0.8),
+          rgba(26, 86, 219, 0.4)
+        );
+      }
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        color: white;
+        padding: 0 20px;
+      }
+      .hero-content h1 {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+        letter-spacing: -1px;
+        line-height: 1.1;
+      }
+      .hero-content p {
+        font-size: 1.2rem;
+        margin-bottom: 35px;
+        opacity: 0.9;
+        max-width: 650px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+      }
+
+      .btn-hero {
+        background: var(--primary);
+        color: white;
+        padding: 16px 40px;
+        border: none;
+        border-radius: 50px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        box-shadow: 0 10px 25px rgba(26, 86, 219, 0.3);
+      }
+      .btn-hero:hover:not(:disabled) {
+        background: var(--primary-dark);
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(26, 86, 219, 0.4);
+      }
+      .btn-hero:disabled {
+        background: var(--text-muted);
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+
+      /* --- Chat Bubble --- */
+      .chat-bubble {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 64px;
+        height: 64px;
+        background: var(--primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 999;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      .chat-bubble:hover {
+        transform: scale(1.1) rotate(5deg);
+      }
+      .chat-bubble svg {
+        width: 30px;
+        height: 30px;
+        fill: white;
+      }
+
+      /* --- Chat Window --- */
+      .chat-window {
+        position: fixed;
+        bottom: 110px;
+        right: 30px;
+        width: 400px;
+        height: 650px;
+        max-height: 80vh;
+        background: var(--bg-glass);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        display: none;
+        flex-direction: column;
+        z-index: 1001;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .chat-window.open {
+        display: flex;
+        animation: slideUp 0.4s ease forwards;
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .chat-header {
+        background: var(--primary);
+        color: white;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .chat-header-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .status-dot {
+        width: 10px;
+        height: 10px;
+        background: var(--accent);
+        border-radius: 50%;
+        box-shadow: 0 0 10px var(--accent);
+      }
+
+      .login-badge {
+        background: rgba(255, 255, 255, 0.15);
+        padding: 6px 12px;
+        border-radius: 50px;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .login-badge.logged-in {
+        background: var(--accent);
+        color: #064e3b;
+      }
+
+      .chat-messages {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+      .msg {
+        max-width: 85%;
+        padding: 12px 16px;
+        border-radius: 15px;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      .msg.bot {
+        background: white;
+        color: var(--text-main);
+        align-self: flex-start;
+        border-bottom-left-radius: 2px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      }
+      .msg.user {
+        background: var(--primary);
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 2px;
+      }
+
+      /* PERFECTED MARKDOWN LIST STYLING */
+      .msg.bot p {
+        margin-bottom: 8px;
+      }
+      .msg.bot p:last-child {
+        margin-bottom: 0;
+      }
+      .msg.bot ul,
+      .msg.bot ol {
+        padding-left: 24px;
+        margin-top: 8px;
+        margin-bottom: 8px;
+      }
+      .msg.bot li {
+        margin-bottom: 4px;
+      }
+      .msg.bot strong {
+        color: #000;
+      }
+
+      .chat-footer {
+        padding: 20px;
+        background: white;
+        display: flex;
+        gap: 10px;
+        border-top: 1px solid #f1f5f9;
+      }
+      .chat-footer input {
+        flex: 1;
+        border: 1px solid #e2e8f0;
+        padding: 12px 20px;
+        border-radius: 50px;
+        outline: none;
+        background: #f8fafc;
+        transition: 0.3s;
+      }
+      .chat-footer input:focus {
+        border-color: var(--primary);
+        background: white;
+      }
+      .chat-footer button {
+        background: var(--primary);
+        border: none;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        cursor: pointer;
+        color: white;
+        transition: 0.3s;
+      }
+      .chat-footer button:hover {
+        transform: rotate(-10deg) scale(1.1);
+      }
+
+      /* --- Login Modal --- */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.8);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+        backdrop-filter: blur(5px);
+        transition: opacity 0.3s;
+      }
+      .modal-card {
+        background: white;
+        width: 90%;
+        max-width: 400px;
+        border-radius: 24px;
+        padding: 40px;
+        text-align: center;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      }
+      .modal-card h2 {
+        font-size: 24px;
+        font-weight: 800;
+        margin-bottom: 10px;
+      }
+      .modal-card p {
+        font-size: 14px;
+        color: var(--text-muted);
+        margin-bottom: 30px;
+      }
+
+      .input-group {
+        margin-bottom: 20px;
+        text-align: left;
+      }
+      .input-group label {
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+        margin-left: 4px;
+      }
+      .modal-input {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #f1f5f9;
+        border-radius: 12px;
+        font-size: 16px;
+        outline: none;
+        transition: 0.3s;
+        text-align: center;
+      }
+      .modal-input:focus {
+        border-color: var(--primary);
+        background: #f8faff;
+      }
+
+      .otp-inputs {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 25px;
+      }
+      .otp-field {
+        width: 45px;
+        height: 55px;
+        border: 2px solid #f1f5f9;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: 700;
+        outline: none;
+        transition: 0.3s;
+      }
+      .otp-field:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(26, 86, 219, 0.1);
+      }
+
+      /* OTP Error Shake Animation */
+      .otp-field.error {
+        border-color: var(--danger) !important;
+        background-color: #fef2f2;
+        animation: shake 0.4s;
+      }
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-5px);
+        }
+        75% {
+          transform: translateX(5px);
+        }
+      }
+
+      /* --- Typing & Toast --- */
+      .typing {
+        display: flex;
+        gap: 5px;
+        padding: 12px 16px;
+        background: white;
+        border-radius: 15px;
+        align-self: flex-start;
+        width: fit-content;
+      }
+      .typing span {
+        width: 6px;
+        height: 6px;
+        background: #cbd5e1;
+        border-radius: 50%;
+        animation: blink 1.4s infinite;
+      }
+      .typing span:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .typing span:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      #toast {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        background: #1e293b;
+        color: white;
+        padding: 12px 25px;
+        border-radius: 50px;
+        font-size: 14px;
+        font-weight: 500;
+        transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        z-index: 9999;
+        opacity: 0;
+      }
+      #toast.show {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+      #toast.error {
+        background: var(--danger);
+      }
+      #toast.success {
+        background: var(--accent);
+        color: #064e3b;
+      }
+
+      @media (max-width: 500px) {
+        .chat-window {
+          width: 100%;
+          height: 100%;
+          bottom: 0;
+          right: 0;
+          border-radius: 0;
+          max-height: 100%;
+        }
+        .hero-content h1 {
+          font-size: 2.5rem;
+        }
+        nav {
+          padding: 15px 20px;
+        }
+        .nav-links {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-logo">
+        <img src="/static/images/cityhall.jpg" alt="Logo" />
+        Memoria
+      </div>
+      <div class="nav-links">
+        <a onclick="toggleChat()">Dashboard</a>
+        <a onclick="toggleChat()">Inquiry</a>
+        <a onclick="toggleChat()">Map</a>
+        <a onclick="openLoginModal()">Portal</a>
+      </div>
+    </nav>
+
+    <div class="hero">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1>Smart Cemetery<br />Management</h1>
+        <p>
+          A digitized approach to burial records, plot mapping, and public
+          inquiries for Mandaue City Public Cemetery.
+        </p>
+        <button class="btn-hero" onclick="toggleChat()">Open Assistant</button>
+      </div>
+    </div>
+
+    <div class="chat-bubble" onclick="toggleChat()">
+      <svg viewBox="0 0 24 24">
+        <path
+          d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"
+        />
+      </svg>
+    </div>
+
+    <div class="chat-window" id="chatWindow">
+      <div class="chat-header">
+        <div class="chat-header-info">
+          <div class="status-dot"></div>
+          <span>Memoria AI</span>
+        </div>
+        <div id="loginBadge" class="login-badge" onclick="openLoginModal()">
+          🔒 Login
+        </div>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="msg bot">
+          Welcome to Memoria. I can help with burial requirements, office
+          locations, or record lookups. How can I assist you?
+        </div>
+      </div>
+      <div class="chat-footer">
+        <input
+          type="text"
+          id="chatInput"
+          placeholder="Type your message..."
+          onkeydown="if (event.key === 'Enter') sendMessage();"
+        />
+        <button onclick="sendMessage()">
+          <svg style="width: 20px; height: 20px" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+      <div class="modal-card">
+        <div id="phoneStep">
+          <h2>Portal</h2>
+          <p>Access secure burial records and plot management.</p>
+          <div class="input-group">
+            <label>Registered Phone Number</label>
+            <input
+              type="tel"
+              id="phoneNumber"
+              class="modal-input"
+              placeholder="09XX XXX XXXX"
+              onkeydown="if (event.key === 'Enter') requestOTP();"
+            />
+          </div>
+          <button
+            id="btnRequest"
+            class="btn-hero"
+            style="width: 100%"
+            onclick="requestOTP()"
+          >
+            Send Access Code
+          </button>
+        </div>
+
+        <div id="otpStep" style="display: none">
+          <h2>Verify Identity</h2>
+          <p>We've sent a 6-digit code to your mobile device.</p>
+          <div class="otp-inputs">
+            <input type="text" class="otp-field" maxlength="1" />
+            <input type="text" class="otp-field" maxlength="1" />
+            <input type="text" class="otp-field" maxlength="1" />
+            <input type="text" class="otp-field" maxlength="1" />
+            <input type="text" class="otp-field" maxlength="1" />
+            <input type="text" class="otp-field" maxlength="1" />
+          </div>
+          <button
+            id="btnVerify"
+            class="btn-hero"
+            style="width: 100%"
+            onclick="verifyOTP()"
+          >
+            Verify & Login
+          </button>
+        </div>
+
+        <button
+          class="modal-close"
+          style="
+            margin-top: 20px;
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            font-size: 14px;
+            text-decoration: underline;
+            cursor: pointer;
+          "
+          onclick="closeLoginModal()"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+
+    <div id="toast"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+      let currentSessionId = null;
+      let isUserLoggedIn = false;
+
+      // Toast Notification
+      function showToast(msg, type = "") {
+        const t = document.getElementById("toast");
+        t.innerText = msg;
+        t.className = "show " + type;
+        setTimeout(() => (t.className = ""), 3000);
+      }
+
+      function toggleChat() {
+        document.getElementById("chatWindow").classList.toggle("open");
+      }
+
+      // Close modal when clicking the dark background overlay
+      document
+        .getElementById("loginModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closeLoginModal();
+        });
+
+      function openLoginModal() {
+        if (isUserLoggedIn) {
+          isUserLoggedIn = false;
+          updateUI();
+          showToast("Logged out successfully");
+          return;
+        }
+        document.getElementById("loginModal").style.display = "flex";
+        resetModal();
+        setTimeout(() => document.getElementById("phoneNumber").focus(), 100);
+      }
+
+      function closeLoginModal() {
+        document.getElementById("loginModal").style.display = "none";
+      }
+
+      function resetModal() {
+        document.getElementById("phoneStep").style.display = "block";
+        document.getElementById("otpStep").style.display = "none";
+        document.querySelectorAll(".otp-field").forEach((f) => {
+          f.value = "";
+          f.classList.remove("error");
+        });
+      }
+
+      // --- NEW SMART OTP LOGIC ---
+      document.addEventListener("DOMContentLoaded", () => {
+        const otpFields = document.querySelectorAll(".otp-field");
+
+        otpFields.forEach((field, idx) => {
+          // When a user clicks a box, automatically highlight the text so they can type over it easily
+          field.addEventListener("focus", () => {
+            field.select();
+            // Remove error class if they are trying to fix it
+            otpFields.forEach((f) => f.classList.remove("error"));
+          });
+
+          // Handle typing / moving forward
+          field.addEventListener("input", (e) => {
+            field.value = field.value.replace(/\D/g, ""); // Allow only numbers
+            if (field.value && idx < 5) {
+              otpFields[idx + 1].focus();
+            } else if (field.value && idx === 5) {
+              // Tiny timeout so the last number visibly populates before checking
+              setTimeout(() => verifyOTP(), 50);
+            }
+          });
+
+          // Handle backspace / moving backward
+          field.addEventListener("keydown", (e) => {
+            if (e.key === "Backspace" && !field.value && idx > 0) {
+              otpFields[idx - 1].focus();
+              otpFields[idx - 1].value = "";
+            } else if (e.key === "Enter") {
+              verifyOTP();
+            }
+          });
+
+          // Handle pasting a full code
+          field.addEventListener("paste", (e) => {
+            e.preventDefault();
+            const pasteData = e.clipboardData
+              .getData("text")
+              .replace(/\D/g, "")
+              .slice(0, 6);
+            pasteData.split("").forEach((char, i) => {
+              otpFields[i].value = char;
+            });
+            if (pasteData.length > 0) {
+              otpFields[Math.min(pasteData.length - 1, 5)].focus();
+              if (pasteData.length === 6) {
+                setTimeout(() => verifyOTP(), 50);
+              }
+            }
+          });
+        });
+      });
+
+      async function requestOTP() {
+        const phone = document.getElementById("phoneNumber").value;
+        if (!phone) return showToast("Enter phone number", "error");
+
+        const btn = document.getElementById("btnRequest");
+        const originalText = btn.innerText;
+        btn.innerText = "Sending...";
+        btn.disabled = true;
+
+        try {
+          const res = await fetch("/api/request_otp", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ phone }),
+          });
+          if (res.ok) {
+            document.getElementById("phoneStep").style.display = "none";
+            document.getElementById("otpStep").style.display = "block";
+            showToast("Code sent!", "success");
+            setTimeout(
+              () => document.querySelectorAll(".otp-field")[0].focus(),
+              100,
+            );
+          } else {
+            showToast("User not recognized", "error");
+          }
+        } catch (e) {
+          showToast("Server error", "error");
+        } finally {
+          btn.innerText = originalText;
+          btn.disabled = false;
+        }
+      }
+
+      async function verifyOTP() {
+        const phone = document.getElementById("phoneNumber").value;
+        const otpFields = document.querySelectorAll(".otp-field");
+        const code = Array.from(otpFields)
+          .map((f) => f.value)
+          .join("");
+
+        if (code.length < 6) return; // Wait until fully typed
+
+        const btn = document.getElementById("btnVerify");
+        const originalText = btn.innerText;
+        btn.innerText = "Verifying...";
+        btn.disabled = true;
+
+        try {
+          const res = await fetch("/api/verify_otp", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ phone, code }),
+          });
+          const data = await res.json();
+
+          if (data.success) {
+            isUserLoggedIn = true;
+            updateUI();
+            closeLoginModal();
+            showToast("Access Granted", "success");
+          } else {
+            showToast("Invalid Code", "error");
+            // DO NOT ERASE: Just add the error shake animation
+            otpFields.forEach((f) => f.classList.add("error"));
+            // Focus the last field and select it so they can easily type a new number
+            otpFields[5].focus();
+            otpFields[5].select();
+          }
+        } catch (e) {
+          showToast("Error verifying", "error");
+        } finally {
+          btn.innerText = originalText;
+          btn.disabled = false;
+        }
+      }
+
+      function updateUI() {
+        const b = document.getElementById("loginBadge");
+        b.innerText = isUserLoggedIn ? "🔓 Access" : "🔒 Login";
+        b.className = isUserLoggedIn ? "login-badge logged-in" : "login-badge";
+      }
+
+      async function sendMessage() {
+        const input = document.getElementById("chatInput");
+        const msgArea = document.getElementById("chatMessages");
+        const text = input.value.trim();
+        if (!text) return;
+
+        msgArea.innerHTML += `<div class="msg user">${text}</div>`;
+        input.value = "";
+        msgArea.scrollTop = msgArea.scrollHeight;
+
+        const typing = document.createElement("div");
+        typing.className = "typing";
+        typing.id = "temp-typing";
+        typing.innerHTML = "<span></span><span></span><span></span>";
+        msgArea.appendChild(typing);
+        msgArea.scrollTop = msgArea.scrollHeight;
+
+        try {
+          const res = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              message: text,
+              session_id: currentSessionId,
+              is_logged_in: isUserLoggedIn,
+            }),
+          });
+          const data = await res.json();
+          currentSessionId = data.session_id;
+
+          document.getElementById("temp-typing").remove();
+          const formatted = DOMPurify.sanitize(marked.parse(data.response));
+          msgArea.innerHTML += `<div class="msg bot">${formatted}</div>`;
+          msgArea.scrollTop = msgArea.scrollHeight;
+        } catch (e) {
+          document.getElementById("temp-typing").remove();
+          showToast("Connection lost", "error");
+        }
+      }
+    </script>
+  </body>
+</html>

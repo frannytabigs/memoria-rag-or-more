@@ -1,0 +1,18 @@
+# Security
+.env
+
+# Vector Database (Too large and auto-generated)
+chroma_db/
+
+# Python Cache
+__pycache__/
+app/__pycache__/
+*.pyc
+
+# Local SQLite Database
+memoria_chat.db
+memoria_chat.db-journal
+
+# Virtual Environment (If you are using one)
+venv/
+env/

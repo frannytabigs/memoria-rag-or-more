@@ -178,7 +178,7 @@ def get_response(user_question, chat_history, is_logged_in=False):
     
     elif category == "CEMETERY_RECORDS":
         if not is_logged_in:
-             return "It sounds like you want me to search the official cemetery records. To protect families' privacy, you must be logged in to view specific burial data. Please click the **Login** button at the top! If you meant to ask a general public question, just let me know."
+             return "It sounds like you want me to search the official cemetery records. To protect families' privacy, you must be logged in to view specific burial data. Please click the **Login** button at the top! If you meant to ask a general public question, just let me know. If this is a mistake, please clarify your question."
         return run_database_query(user_question, formatted_history)
         
     elif category == "CLARIFY":

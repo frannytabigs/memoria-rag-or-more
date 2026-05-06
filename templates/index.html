@@ -647,6 +647,7 @@
     <script>
       let currentSessionId = null;
       let isUserLoggedIn = false;
+      let userPhoneNumber = null; // NEW: Global variable to remember who is talking
 
       // Toast Notification
       function showToast(msg, type = "") {
@@ -769,7 +770,7 @@
               100,
             );
           } else {
-            showToast("User not recognized", "error");
+            showToast("Failed to send SMS, try again", "error");
           }
         } catch (e) {
           showToast("Server error", "error");
@@ -797,12 +798,13 @@
           const res = await fetch("/api/verify_otp", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ phone, code }),
+            body: JSON.stringify({ phone, code, session_id: currentSessionId }),
           });
           const data = await res.json();
 
           if (data.success) {
             isUserLoggedIn = true;
+            userPhoneNumber = data.phone; // FIX: Save to global variable, remove 'const'
             updateUI();
             closeLoginModal();
             showToast("Access Granted", "success");
@@ -853,6 +855,7 @@
               message: text,
               session_id: currentSessionId,
               is_logged_in: isUserLoggedIn,
+              phone_number: userPhoneNumber, // FIX: Match the Python key and use global variable
             }),
           });
           const data = await res.json();

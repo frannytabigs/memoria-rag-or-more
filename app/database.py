@@ -21,6 +21,7 @@ def init_db():
             session_id TEXT NOT NULL,
             user_message TEXT NOT NULL,
             bot_response TEXT NOT NULL,
+            phone_number TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')

@@ -1,93 +1,52 @@
-{
-  "blocks": [
-    {
-      "block_id": 1,
-      "block_name": "Block A",
-      "block_type": "Lawn/Grounds",
-      "total_rows": 5,
-      "total_columns": 5
-    },
-    {
-      "block_id": 2,
-      "block_name": "Block B",
-      "block_type": "Apartment/Vault",
-      "total_rows": 4,
-      "total_columns": 10
-    }
-  ],
-  "graves": [
-    {
-      "grave_id": 1,
-      "block_id": 1,
-      "grave_code": "A-01",
-      "status": "Occupied"
-    },
-    {
-      "grave_id": 2,
-      "block_id": 1,
-      "grave_code": "A-02",
-      "status": "Pending Exhumation"
-    },
-    { "grave_id": 3, "block_id": 1, "grave_code": "A-03", "status": "Vacant" },
-    { "grave_id": 4, "block_id": 2, "grave_code": "B-01", "status": "Merged" },
-    { "grave_id": 5, "block_id": 2, "grave_code": "B-02", "status": "Merged" },
-    { "grave_id": 6, "block_id": 2, "grave_code": "B-03", "status": "Occupied" }
-  ],
-  "deceased": [
-    {
-      "deceased_id": 1,
-      "control_number": "CTRL-2022-045",
-      "name": "Pedro Penduko",
-      "date_of_death": "2022-03-12"
-    },
-    {
-      "deceased_id": 2,
-      "control_number": "CTRL-2018-112",
-      "name": "Maria Clara Santos",
-      "date_of_death": "2018-11-05"
-    },
-    {
-      "deceased_id": 3,
-      "control_number": "CTRL-2025-001",
-      "name": "Antonio Luna",
-      "date_of_death": "2025-01-20"
-    },
-    {
-      "deceased_id": 4,
-      "control_number": "CTRL-2026-088",
-      "name": "Leonor Rivera",
-      "date_of_death": "2026-04-02"
-    }
-  ],
-  "interments": [
-    {
-      "interment_id": 1,
-      "deceased_id": 1,
-      "grave_id": 1,
-      "status": "Active",
-      "date_buried": "2022-03-15"
-    },
-    {
-      "interment_id": 2,
-      "deceased_id": 2,
-      "grave_id": 2,
-      "status": "Scheduled for Exhumation",
-      "date_buried": "2018-11-10"
-    },
-    {
-      "interment_id": 3,
-      "deceased_id": 3,
-      "grave_id": 4,
-      "status": "Active",
-      "date_buried": "2025-01-25",
-      "notes": "Occupies merged plots B-01 and B-02 due to oversized vault requirement."
-    },
-    {
-      "interment_id": 4,
-      "deceased_id": 4,
-      "grave_id": 6,
-      "status": "Active",
-      "date_buried": "2026-04-06"
-    }
-  ]
-}
+[
+  {
+    "grave_id": 101,
+    "block_id": 1,
+    "block_name": "Niche Wall A",
+    "grave_code": "NWA-01-05",
+    "deceased_name": null,
+    "phone_number": null,
+    "lease_expiration_date": null,
+    "urgency_level": "Vacant"
+  },
+  {
+    "grave_id": 102,
+    "block_id": 1,
+    "block_name": "Niche Wall A",
+    "grave_code": "NWA-01-12",
+    "deceased_name": null,
+    "phone_number": null,
+    "lease_expiration_date": null,
+    "urgency_level": "Vacant"
+  },
+  {
+    "grave_id": 203,
+    "block_id": 2,
+    "block_name": "Lawn/Grounds Section B",
+    "grave_code": "LSB-03-17",
+    "deceased_name": "Maria Santos Dela Cruz",
+    "phone_number": "09171234567",
+    "lease_expiration_date": "2025-11-20",
+    "urgency_level": "Already Expired"
+  },
+  {
+    "grave_id": 215,
+    "block_id": 2,
+    "block_name": "Lawn/Grounds Section B",
+    "grave_code": "LSB-04-03",
+    "deceased_name": "Rogelio Reyes",
+    "phone_number": "09189876543",
+    "lease_expiration_date": "2026-05-25",
+    "urgency_level": "Expiring Soon"
+  },
+  {
+    "grave_id": 227,
+    "block_id": 3,
+    "block_name": "Bone Chamber C",
+    "grave_code": "BCC-02-09",
+    "deceased_name": "Elena Gonzales",
+    "phone_number": "09195551234",
+    "lease_expiration_date": "2026-06-02",
+    "urgency_level": "Expiring Soon"
+  }
+]

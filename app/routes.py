@@ -37,31 +37,41 @@ def request_otp():
     if not phone:
         return jsonify({"error": "Invalid Philippine mobile number format."}), 400
 
-    code = str(random.randint(100000, 999999))
+    code = 0
+    if not otp_storage.get(phone):
+        code = str(random.randint(100000, 999999))
+        otp_storage[phone] = {
+            "code": code,
+            "expires_at": time.time() + 300
+        }
     
-    otp_storage[phone] = {
-        "code": code,
-        "expires_at": time.time() + 300
-    }
-    
-    print(f"DEBUG - Generated OTP for {phone}: {code}")
+        print(f"DEBUG - Generated OTP for {phone}: {code}")
+    else:
+        code = otp_storage[phone]['code']
+        print(f"DEBUG - OTP already exists for {phone}. Not generating a new one. Existing OTP: {otp_storage[phone]['code']}")
 
     api_key = os.getenv("TEXTBEE_API_KEY")
     device_id = os.getenv("TEXTBEE_DEVICE_ID")
-    print(f"DEBUG - TextBee API Key: {api_key if api_key else 'Not Set'}, Device ID: {device_id}")
+
     if api_key and device_id and "your_textbee" not in api_key:
+        # Add these lines to strip away hidden spaces or quotes
+        api_key = api_key.strip().strip('"').strip("'")
+        device_id = device_id.strip().strip('"').strip("'")
+        
         try:
-            url = f"https://api.textbee.dev/api/v1/gateway/devices/{device_id}/send-sms"
+            url = f"https://api.textbee.dev/api/v1/gateway/devices/{device_id}/sendSMS"
             headers = { "x-api-key": api_key }
             payload = {
-                "recipients": [phone],
-                "message": f"Your Memoria login code is {code}. It expires in 5 minutes."
+                "receivers": [phone],
+                "smsBody": f"Your Memoria login code is {code}. It expires in 5 minutes."
             }
             x = requests.post(url, json=payload, headers=headers)
             print(f"DEBUG - TextBee Response: {x.status_code} - {x.text}")
-            if x.status_code != 200:
-                return jsonify({"error": "Failed to send SMS"}), 500
-            return jsonify({"message": "OTP generated and sent"}), 200
+            if x.status_code == 201:
+                return jsonify({"message": "OTP generated and sent"}), 200
+            if x.status_code == 200:
+                return jsonify({"message": "OTP generated and sent"}), 200
+            return jsonify({"error": "Failed to send SMS"}), 500
         except Exception as e:
             print(f"TextBee Error: {e}")
             return jsonify({"error": "Failed to send SMS"}), 500
